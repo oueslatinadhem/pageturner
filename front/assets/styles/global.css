@@ -1,0 +1,76 @@
+/* Styles basiques pour la mise en page */
+table {
+    border-collapse: collapse;
+    width: 80%; /* Le tableau occupe 80% de la largeur de son parent */
+    margin: 0 auto; /* Centre le tableau horizontalement */
+}
+
+/* Répond à une largeur d'écran inférieure à 800px */
+@media (max-width: 800px) {
+    table {
+        width: 100%; /* Le tableau prend toute la largeur */
+    }
+}
+
+#entete tr td:first-child {
+    font-size:2rem;
+    text-align:center;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: white;
+}
+
+thead tr , tbody tr:nth-child(even) {
+    background-color: lightgray;
+}
+
+th, td {
+    border: 0;
+    padding: 8px;
+    text-align: left;
+    width: auto;
+}
+
+th {
+    text-align:center;
+}
+
+/* La première colonne s'étend pour remplir l'espace disponible */
+td:first-child {
+    width: 100%;
+}
+
+/* Styles pour les boutons */
+.button {
+    background-color: lightblue;
+    color: black;
+    min-width: 3rem;
+    min-height: 3rem;
+    align-content: center;
+    margin: .5rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 2rem;
+    border: 1px solid black;
+    border-radius: .5rem;
+    cursor:pointer;
+}
+
+.tooltip {
+    position: absolute;
+    font-size: 1rem;
+    transform: translate(-50%,-4.5rem);
+    background-color: lemonchiffon;
+    border: 1px solid black;
+    padding: .25rem;
+    border-radius: .5rem;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }

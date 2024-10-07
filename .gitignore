@@ -1,0 +1,10 @@
+# template python 
+# Ignore les fichiers Python compilés
+__pycache__/
+# Autres fichiers à ignorer
+*.pyc
+*.swp
+
+# projet 
+# ignorer la base de données
+*.db
