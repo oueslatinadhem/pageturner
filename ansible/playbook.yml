@@ -1,4 +1,4 @@
-- name: Deploy application to Staging and Production
+- name: Deploiement de l'application en staging et en prod
   hosts: all
   become: true
   vars:
@@ -6,18 +6,18 @@
     container_name: "dico-app"
     app_port: 8080
   tasks:
-    - name: Ensure Docker is installed
+    - name: Verification que Docker est bien installé
       apt:
         name: docker.io
         state: present
         update_cache: yes
 
-    - name: Pull latest application Docker image
+    - name: Pull de la dernière image docker de l'app
       docker_image:
         name: "{{ app_image }}"
         source: pull
 
-    - name: Stop existing container if running
+    - name: Stop un eventuel container en cours d'execution
       docker_container:
         name: "{{ container_name }}"
         state: stopped
@@ -30,7 +30,7 @@
         state: absent
       ignore_errors: yes
 
-    - name: Deploy new application container
+    - name: Deploiment du container de l'app
       docker_container:
         name: "{{ container_name }}"
         image: "{{ app_image }}"
