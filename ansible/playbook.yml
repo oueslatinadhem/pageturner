@@ -1,4 +1,3 @@
----
 - name: Deploy application to Staging and Production
   hosts: all
   become: true
@@ -23,13 +22,13 @@
         name: "{{ container_name }}"
         state: stopped
         force_kill: yes
-      ignore_errors: yes  # Appliqué au niveau de la tâche
+      ignore_errors: yes
 
     - name: Remove existing container
       docker_container:
         name: "{{ container_name }}"
         state: absent
-      ignore_errors: yes  # Appliqué au niveau de la tâche
+      ignore_errors: yes
 
     - name: Deploy new application container
       docker_container:
