@@ -1,0 +1,41 @@
+---
+- name: Deploy application to Staging and Production
+  hosts: all
+  become: true
+  vars:
+    app_image: "nadhemo/pageturner_img:latest"
+    container_name: "dico-app"
+    app_port: 8080
+  tasks:
+    - name: Ensure Docker is installed
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Pull latest application Docker image
+      docker_image:
+        name: "{{ app_image }}"
+        source: pull
+
+    - name: Stop existing container if running
+      docker_container:
+        name: "{{ container_name }}"
+        state: stopped
+        force_kill: yes
+      ignore_errors: yes  # Appliqué au niveau de la tâche
+
+    - name: Remove existing container
+      docker_container:
+        name: "{{ container_name }}"
+        state: absent
+      ignore_errors: yes  # Appliqué au niveau de la tâche
+
+    - name: Deploy new application container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ app_image }}"
+        state: started
+        restart_policy: always
+        ports:
+          - "{{ app_port }}:{{ app_port }}"

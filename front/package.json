@@ -1,0 +1,12 @@
+{
+  "name": "pageturner",
+  "version": "1.0.0",
+  "description": "Front-end for the PageTurner project",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -a localhost -p 8080"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "pageturnerapp",
+  "version": "1.0.0",
+  "description": "Page Turner App",
+  "main": "front/scripts/main.js",
+  "scripts": {
+    "start": "http-server front",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {}
+}

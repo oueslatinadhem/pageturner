@@ -1,3 +1,7 @@
+// Définir les URLs en fonction des environnements Prod et Staging
+const APIUrl = window.location.hostname === '192.168.1.126'
+  ? 'http://192.168.1.126:8080/api/tasks' // URL Prod
+  : 'http://192.168.1.42:8080/api/tasks'; // URL Staging
 
 // Fonction pour afficher une boîte de dialogue modale
 function showModal(title, detail, isEdit = false, id = null) {
@@ -34,13 +38,12 @@ function showModal(title, detail, isEdit = false, id = null) {
       const formData = new FormData(document.getElementById('editForm'));
       const data = Object.fromEntries(formData.entries());
       dialog.close();
-      if (data.id=='null') 
-        sendRequest('POST', `${APIUrl}/${id}`, data)
+      if (data.id === 'null') 
+        sendRequest('POST', `${APIUrl}`, data);
       else
-        sendRequest('PUT', `${APIUrl}/${id}`, data)
-    
-      // Ici, vous pouvez faire ce que vous voulez avec les données, par exemple les envoyer à un serveur
-      fetchData();
+        sendRequest('PUT', `${APIUrl}/${id}`, data);
+
+      fetchData(); // Rafraîchir les données après enregistrement
     });
     buttons.appendChild(saveButton);
   }
@@ -61,6 +64,7 @@ function showModal(title, detail, isEdit = false, id = null) {
   // Ouverture de la boîte de dialogue
   dialog.showModal();
 }
+
 // Fonction pour envoyer une requête AJAX
 async function sendRequest(method, url, data) {
   const response = await fetch(url, {
@@ -68,7 +72,7 @@ async function sendRequest(method, url, data) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(data)
+    body: method !== 'GET' && method !== 'DELETE' ? JSON.stringify(data) : null
   });
   return response.json();
 }
@@ -86,15 +90,13 @@ function handleButton(event) {
     // Afficher les détails de l'élément
     sendRequest('GET', `${APIUrl}/${id}`)
       .then(data => {
-        data=JSON.parse(data);
         showModal(data.titre, data.detail, false, id);
       });
   } else if (action === 'edit') {
     // Afficher le formulaire de modification
     sendRequest('GET', `${APIUrl}/${id}`)
       .then(data => {
-        data=JSON.parse(data);
-       showModal(data.titre, data.detail, true, id);
+        showModal(data.titre, data.detail, true, id);
       });
   } else if (action === 'delete') {
     // Confirmer la suppression
@@ -105,54 +107,55 @@ function handleButton(event) {
   }
 }
 
-
 // Récupérer les données depuis le serveur
 async function fetchData() {
   const response = await sendRequest('GET', APIUrl);
   let data = await response;
-  if (data=="") data={};
-  data=JSON.parse(data);
+  if (data === "") data = [];
+  
   // Mettre à jour le tableau HTML avec les données reçues
   const tableBody = document.getElementById('data-table');
   tableBody.innerHTML = '';
   data.forEach(item => {
     // Créer une ligne de tableau pour chaque élément
     const row = document.createElement('tr');
-    const titre= document.createElement('td');
-    titre.textContent=item.titre;
+    const titre = document.createElement('td');
+    titre.textContent = item.titre;
     row.appendChild(titre);
+    
     let col = document.createElement('td');
-    let bt=document.createElement('div');
-    bt.className='button';
-    bt.dataset.action='detail';
-    bt.dataset.id=item.id;
-    bt.innerHTML='🔍<br><span class="tooltip">détails</span>';
-    bt.addEventListener('click',handleButton);
+    let bt = document.createElement('div');
+    bt.className = 'button';
+    bt.dataset.action = 'detail';
+    bt.dataset.id = item.id;
+    bt.innerHTML = '🔍<br><span class="tooltip">détails</span>';
+    bt.addEventListener('click', handleButton);
     col.appendChild(bt);
     row.appendChild(col);
+
     col = document.createElement('td');
-    bt=document.createElement('div');
-    bt.className='button';
-    bt.dataset.action='edit';
-    bt.dataset.id=item.id;
-    bt.innerHTML='🖊️<br><span class="tooltip">modifier</span>';
-    bt.addEventListener('click',handleButton);
+    bt = document.createElement('div');
+    bt.className = 'button';
+    bt.dataset.action = 'edit';
+    bt.dataset.id = item.id;
+    bt.innerHTML = '🖊️<br><span class="tooltip">modifier</span>';
+    bt.addEventListener('click', handleButton);
     col.appendChild(bt);
     row.appendChild(col);
+
     col = document.createElement('td');
-    bt=document.createElement('div');
-    bt.className='button';
-    bt.dataset.action='delete';
-    bt.dataset.id=item.id;
-    bt.innerHTML='🗑️<br><span class="tooltip">supprimer</span>';
-    bt.addEventListener('click',handleButton);
+    bt = document.createElement('div');
+    bt.className = 'button';
+    bt.dataset.action = 'delete';
+    bt.dataset.id = item.id;
+    bt.innerHTML = '🗑️<br><span class="tooltip">supprimer</span>';
+    bt.addEventListener('click', handleButton);
     col.appendChild(bt);
     row.appendChild(col);
+
     tableBody.appendChild(row);
   });
 }
-
-
 
 // Fonction pour gérer la soumission du formulaire
 function handleSubmit(event) {
