@@ -1,4 +1,4 @@
-# Utilise l'image de base python:3.8-slim
+# Utilise l'image de base python:3.9
 FROM python:3.9
 
 # Définir le répertoire de travail à /app

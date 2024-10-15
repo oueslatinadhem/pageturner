@@ -24,7 +24,7 @@
         force_kill: yes
       ignore_errors: yes
 
-    - name: Remove existing container
+    - name: Supression d'un container
       docker_container:
         name: "{{ container_name }}"
         state: absent
